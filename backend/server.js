@@ -1,3 +1,5 @@
+const client = require('prom-client');
+client.collectDefaultMetrics();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -22,6 +24,10 @@ app.post("/add", async (req,res)=>{
 app.get("/users", async (req,res)=>{
     const users = await User.find();
     res.json(users);
+});
+app.get('/metrics', async (req, res) => {
+  res.set('Content-Type', client.register.contentType);
+  res.end(await client.register.metrics());
 });
 
 app.listen(5000, ()=> console.log("Backend running on 5000"));
